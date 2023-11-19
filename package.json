@@ -1,0 +1,30 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/MelentQ/algorithms-project-69/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/MelentQ/algorithms-project-69/actions)",
+  "homepage": "https://github.com/MelentQ/algorithms-project-69#readme",
+  "bugs": {
+    "url": "https://github.com/MelentQ/algorithms-project-69/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MelentQ/algorithms-project-69.git"
+  },
+  "license": "ISC",
+  "author": "MelentQ",
+  "scripts": {
+    "test": "npx jest"
+  },
+  "devDependencies": {
+    "@jest/globals": "29.7.0",
+    "eslint": "8.54.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-import": "2.29.0",
+    "eslint-plugin-jest": "27.6.0",
+    "jest": "29.7.0",
+    "jest-cli": "29.7.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
