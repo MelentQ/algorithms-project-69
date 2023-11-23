@@ -35,10 +35,22 @@ function sort(items, left, right, comparator) {
   sort(items, splitIndex, right, comparator);
 }
 
-function quickSort(items, comparator = compareByValue) {
+function reverse(items) {
+  for (let i = 0; i <= Math.floor((items.length - 1) / 2); i += 1) {
+    const temp = items[i];
+    items[i] = items[items.length - 1 - i];
+    items[items.length - 1 - i] = temp;
+  }
+}
+
+function quickSort(items, order = 'asc', comparator = compareByValue) {
   const result = [...items];
 
   sort(result, 0, result.length - 1, comparator);
+
+  if (order === 'desc') {
+    reverse(result);
+  }
 
   return result;
 }

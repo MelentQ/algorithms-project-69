@@ -13,3 +13,7 @@ test('Step 2', () => {
 test('Step 3', () => {
   expect(search(docs, 'shoot')).toEqual(['doc2', 'doc1']);
 });
+
+test('Step 4', () => {
+  expect(search(docs, 'shoot at me')).toEqual(['doc2', 'doc1']);
+});

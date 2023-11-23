@@ -1,6 +1,5 @@
 const quickSort = require('./utils/quickSort.js');
-const { compareByCount } = require('./utils/comparators.js');
-const binarySearch = require('./utils/binarySearch.js');
+const { compareByRelevance } = require('./utils/comparators.js');
 
 /**
  * Обработка текста
@@ -11,45 +10,65 @@ function splitToTerms(token) {
   return token.match(/\w+/g);
 }
 
-function getNumberOfUses(items, query) {
-  let result = 0;
+function calculateRelevance(items, query) {
+  let sum = 0;
+  let count = 0;
 
-  for (let i = 0; i < items.length; i += 1) {
-    const item = items[i];
-    if (item === query) {
-      result += 1;
+  const terms = splitToTerms(query);
+  let flag = false;
+
+  for (let i = 0; i < terms.length; i += 1) {
+    const term = terms[i];
+    flag = false;
+
+    for (let j = 0; j < items.length; j += 1) {
+      const item = items[j];
+
+      if (term === item) {
+        sum += 1;
+        flag = true;
+      }
+    }
+
+    if (flag) {
+      count += 1;
     }
   }
 
-  return result;
+  return ({
+    total: terms.length,
+    count, // количество слов из искомого набора
+    sum, // сумма вхождений
+  });
 }
 
-function getProcessedDocs(docs) {
+function getProcessedDocs(docs, query) {
   const result = [];
 
   for (let i = 0; i < docs.length; i += 1) {
     const doc = docs[i];
     const terms = splitToTerms(doc.text);
     const sortedTerms = quickSort(terms);
-    const numberOfUses = getNumberOfUses(sortedTerms);
+    const relevance = calculateRelevance(sortedTerms, query);
 
     result.push({
-      ...doc,
+      origin: doc,
+      query,
       text: sortedTerms,
-      count: numberOfUses,
+      relevance,
     });
   }
 
   return result;
 }
 
-function filterByQuery(docs, query) {
+function getFilteredDocs(docs) {
   const result = [];
 
   for (let i = 0; i < docs.length; i += 1) {
     const doc = docs[i];
 
-    if (binarySearch(doc.text, query)) {
+    if (doc.relevance.count > 0) {
       result.push(doc);
     }
   }
@@ -63,7 +82,7 @@ function getIds(docs) {
   for (let i = 0; i < docs.length; i += 1) {
     const doc = docs[i];
 
-    result.push(doc.id);
+    result.push(doc.origin.id);
   }
 
   return result;
@@ -76,15 +95,13 @@ function getIds(docs) {
  * @returns {String[]} - docs ids
  */
 function search(docs, query) {
-  const processedDocs = getProcessedDocs(docs);
+  const processedDocs = getProcessedDocs(docs, query);
 
-  const filteredDocs = filterByQuery(processedDocs, query);
+  const filteredDocs = getFilteredDocs(processedDocs);
 
-  const sortedDocs = quickSort(filteredDocs, compareByCount);
+  const sortedDocs = quickSort(filteredDocs, 'desc', compareByRelevance);
 
-  const ids = getIds(sortedDocs);
-
-  return ids;
+  return getIds(sortedDocs);
 }
 
 module.exports = search;

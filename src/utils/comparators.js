@@ -10,19 +10,27 @@ function compareByValue(a, b) {
   return 1;
 }
 
-function compareByCount(a, b) {
-  if (a.count < b.count) {
+function compareByRelevance(a, b) {
+  if (a.relevance.count < b.relevance.count) {
     return -1;
   }
 
-  if (a.count === b.count) {
-    return 0;
+  if (a.relevance.count > b.relevance.count) {
+    return 1;
   }
 
-  return 1;
+  if (a.relevance.sum < b.relevance.sum) {
+    return -1;
+  }
+
+  if (a.relevance.sum > b.relevance.sum) {
+    return 1;
+  }
+
+  return 0;
 }
 
 module.exports = {
   compareByValue,
-  compareByCount,
+  compareByRelevance,
 };
